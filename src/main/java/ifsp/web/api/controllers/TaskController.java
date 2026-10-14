@@ -5,81 +5,68 @@ import ifsp.web.api.services.TaskService;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
 public class TaskController {
     private TaskService taskService = new TaskService();
 
-    @GetMapping
-    public ResponseEntity<?> getTask(){
+    @GetMapping("/usuarios/{email}/tasks")
+    public ResponseEntity<?> getTaskUsuario(@PathVariable String email){
         try {
-            List<Task> listaTask = taskService.getTask();
-            return ResponseEntity.ok(listaTask);
-        } catch(RuntimeException e){
-            return ResponseEntity.status(500).body("Erro ao inicializar a lista de permanencia.");
+            return ResponseEntity.status(200).body(taskService.getTaskUsuario(email));
+        } catch(Exception e){
+            return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 
-    @PostMapping("/criar")
-    public ResponseEntity<?> postTask(@Valid @RequestBody Task task){
-            taskService.postTask(task);
-            return ResponseEntity.status(201).body("Task criado com sucesso.");
-    }
-
-    @DeleteMapping("/excluir")
-    public ResponseEntity<?> deleteTask(){
-            taskService.deleteTask();
-            return ResponseEntity.status(200).body("Todas as Task foram apagadas.");
-    }
-
-    @PutMapping("/concluida/{id}")
-    public ResponseEntity<?> taskConcluida(@PathVariable int id){
+    @PostMapping("/usuarios/{email}/tasks")
+    public ResponseEntity<?> postTaskUsuario(@PathVariable String email, @Valid @RequestBody Task task,BindingResult bindingResult){
         try {
-            taskService.taskConcluida(id);
-            return ResponseEntity.status(200).body("Task Concluida com sucesso.");
-        } catch(RuntimeException e){
+            if(bindingResult.hasErrors()){
+                String mensagemError = bindingResult.getFieldError().getDefaultMessage();
+                return ResponseEntity.status(400).body(mensagemError);
+            }
+            return ResponseEntity.status(201).body(taskService.postTaskUsuario(email, task));
+        } catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/excluir/{id}")
-    public ResponseEntity<?> deleteTaskId(@PathVariable int id){
+    @GetMapping("/tasks/{id}")
+    public ResponseEntity<?> getDetalheTask(@PathVariable int id){
         try {
-            taskService.deleteTaskId(id);
-            return ResponseEntity.status(200).body("Task deletada com sucesso.");
-        } catch(RuntimeException e){
+            return ResponseEntity.status(200).body(taskService.getDetalheTask(id));
+        } catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar/{id}")
-    public ResponseEntity<?> putTask(@PathVariable int id, @Valid @RequestBody Task task){
+    @PutMapping("/tasks/{id}")
+    public ResponseEntity<?> putTak(@PathVariable int id, @Valid @RequestBody Task task, BindingResult bindingResult){
         try {
-            taskService.putTask(id, task);
-            return ResponseEntity.status(200).body("Task atualizada com sucesso.");
-        } catch(RuntimeException e){
+            if (bindingResult.hasErrors()){
+                String mensagemError = bindingResult.getFieldError().getDefaultMessage();
+                return ResponseEntity.status(400).body(mensagemError);
+            }
+            return ResponseEntity.status(200).body(taskService.putTask(id,task));
+        } catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getTaskId(@PathVariable int id){
+    @DeleteMapping("/tasks/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable int id){
         try {
-            Task task = taskService.getTaskId(id);
-            return ResponseEntity.ok(task);
-        } catch(RuntimeException e){
+            return ResponseEntity.status(200).body(taskService.deleteTask(id));
+        } catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> tratarErro(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(e.getBindingResult().getFieldError().getDefaultMessage());
-    }
 
 }

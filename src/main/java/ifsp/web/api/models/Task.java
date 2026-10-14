@@ -1,73 +1,99 @@
 package ifsp.web.api.models;
 
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 public class Task {
-
     private int id = 0;
 
-    @NotBlank(message = "O nome e obrigatorio")
-    private String name;
+    @NotBlank(message = "Titulo e um campo obrigatorio.")
+    private String titulo_task;
 
-    @NotNull(message = "O Nivel de Dificuldade e obrigatorio")
-    @Min(value = 1, message = "Nivel de dificuldade tem que ter no minimo 1")
-    @Max(value = 10, message = "Nivel de dificuldade tem no maximo 10")
-    private Integer nivelDiff;
+    @NotBlank(message = "Descricao e um campo obrigatorio.")
+    private String descricao_task;
 
-    @NotBlank(message = "A Descricao e obrigatoria")
-    private String descricao;
+    @NotBlank(message = "Data de inicio, e um campo obrigatorio.")
+    private String data_inicio_task;
 
-    private Boolean concluida = false;
+    @NotBlank(message = "Data de conclusao, e um campo obrigatorio.")
+    private String data_fim_task;
+
+    private String status_task;
+
+    private String data_prevista;
+
+    private String email_usuario;
+
 
     public Task(){}
 
-    public Task(String name, Integer nivelDiff, String descricao){
-        this.name=name;
-        this.nivelDiff=nivelDiff;
-        this.descricao=descricao;
+    public Task(String titulo_task, String descricao_task, String data_inicio_task, String data_fim_task) {
+        this.titulo_task = titulo_task;
+        this.descricao_task = descricao_task;
+        this.data_inicio_task = data_inicio_task;
+        this.data_fim_task = data_fim_task;
     }
 
-    public int getId(){
-        return id;
+    public int getId(){return id;}
+    public void setId(int id){this.id+=id;}
+    public int gerarProximoId(int id){return ++id;}
+
+    public String getTitulo_task() {
+        return titulo_task;
     }
 
-    public void setId(int id){
-        this.id+=id;
+    public void setTitulo_task(String titulo_task) {
+        this.titulo_task = titulo_task;
     }
 
-    public int gerarProximoId(int id){
-        return ++id;
+    public String getDescricao_task() {
+        return descricao_task;
     }
 
-    public String getDescricao(){
-        return descricao;
+    public void setDescricao_task(String descricao_task) {
+        this.descricao_task = descricao_task;
     }
 
-    public void setDescricao(String descricao){
-        this.descricao=descricao;
+    public String getData_inicio_task() {
+        return data_inicio_task;
     }
 
-    public String getName() {
-        return name;
+    public void setData_inicio_task(String data_inicio_task) {
+        this.data_inicio_task = data_inicio_task;
     }
 
-    public void setName(String name){
-        this.name=name;
+    public String getData_fim_task() {
+        return data_fim_task;
     }
 
-    public Integer getNivelDiff() {
-        return nivelDiff;
+    public void setData_fim_task(String data_fim_task) {
+        this.data_fim_task = data_fim_task;
     }
 
-    public void setNivelDiff(Integer nivelDiff){
-        this.nivelDiff=nivelDiff;
+    public String getData_prevista() {
+        return data_prevista;
     }
 
-    public Boolean getConcluida(){
-        return concluida;
+    public void setData_prevista(String data_prevista) {
+        this.data_prevista = data_prevista;
     }
 
-    public void setConcluida(Boolean concluida){
-        this.concluida=concluida;
+    public String getStatus_task() {
+        return status_task;
+    }
+
+    public void setStatus_task(String status_task) {
+        this.status_task = status_task;
+    }
+
+    public String getEmail_usuario() {
+        return email_usuario;
+    }
+
+    public void setEmail_usuario(String email_usuario) {
+        this.email_usuario = email_usuario;
     }
 }
