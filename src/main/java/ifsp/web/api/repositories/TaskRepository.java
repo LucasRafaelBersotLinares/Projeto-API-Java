@@ -1,45 +1,40 @@
 package ifsp.web.api.repositories;
 
 import ifsp.web.api.models.Task;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskRepository {
-    private ArrayList<Task> listaTask = new ArrayList<>();
+    private static ArrayList<Task> tasks = new ArrayList<>();
 
-    public List<Task> getTask(){
-        return listaTask;
+    public List<Task> getTaskUsuario(String email){
+        List<Task> taskUser = new ArrayList<Task>();
+        for(Task task:tasks){
+            if(task.getEmail_usuario().equals(email)){
+                taskUser.add(task);
+            }
+        }
+        return taskUser;
     }
 
-    public void postTask(Task newTask){
-        listaTask.add(newTask);
+    public Task postTaskUsuario(Task task){
+        tasks.add(task);
+        return task;
     }
 
-    public void deleteTask(){
-        listaTask = new ArrayList<>();
-    }
-
-    public void deleteTaskId(Task task){
-        listaTask.remove(task);
-    }
-
-    public Task getTaskId(int id){
-        for(Task t:listaTask) {
-            if(t.getId() == id){
-                return t;
+    public Task getDetalheTask(int id) {
+        for (Task task:tasks){
+            if(task.getId() == id){
+                return task;
             }
         }
         return null;
     }
 
-    public void putTask(Task task, Task taskBody){
-        task.setName(taskBody.getName());
-        task.setNivelDiff(taskBody.getNivelDiff());
-        task.setDescricao(taskBody.getDescricao());
+    public Task deleteTask(Task task) {
+        tasks.remove(task);
+        return task;
     }
-
-    public void taskConcluida(Task task){
-        task.setConcluida(true);
-    }
-
 }
